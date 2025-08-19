@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public class BookDTO {
 
     public String isbn;
-    public String tittle;
+    public String title;
     public String author;
     public String publisher;
     @JsonProperty("publication_date")
@@ -25,12 +25,12 @@ public class BookDTO {
         this.isbn = isbn;
     }
 
-    public String getTittle() {
-        return tittle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setTittle(String tittle) {
-        this.tittle = tittle;
+    public void setTittle(String title) {
+        this.title = title;
     }
 
     public String getAuthor() {

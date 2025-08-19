@@ -11,7 +11,7 @@ public class BookMapper {
         book.setGenre(bookDTO.getGenre());
         book.setPublisher(bookDTO.getPublisher());
         book.setSynopsis(bookDTO.getSynopsis());
-        book.setTittle(bookDTO.getTittle());
+        book.setTitle(bookDTO.getTitle());
         book.setPosterPath(bookDTO.getPosterPath());
         book.setPublicationDate(bookDTO.getPublicationDate());
         return book;

@@ -6,8 +6,9 @@ import tech.ada.model.Book;
 
 @ApplicationScoped
 public class BookRepository implements PanacheRepository<Book> {
-    public Book findByTittle (String tittle){
-        return find("tittle", tittle).firstResult();
+
+    public Book findByTitle (String title){
+        return find("title", title).firstResult();
     }
 
 }

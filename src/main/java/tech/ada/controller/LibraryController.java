@@ -24,7 +24,6 @@ public class LibraryController {
     BookRepository repository;
 
     @GET
-
     public Response getBook(){
         List<Book> books = repository.findAll().list();
         return  Response.status(Response.Status.OK).entity(books)

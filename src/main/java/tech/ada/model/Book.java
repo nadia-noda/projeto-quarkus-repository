@@ -1,39 +1,67 @@
 package tech.ada.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
 
+import javax.annotation.processing.Generated;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-public class Book extends PanacheEntity {
+@Table(name = "book")
+public class Book {
 
+    @Id
+    @GeneratedValue
+    private Long id;
+    @Column(name = "isbn", nullable = false)
     private String isbn;
-    private String tittle;
+    @Column(name = "tittle", nullable = false)
+    private String title;
+    @Column(name = "author",nullable = false)
     private String author;
+    @Column(name = "publisher",nullable = false)
     private String publisher;
+    @Column(name = "publication_date",nullable = false)
     @JsonProperty("publication_date")
     private LocalDate publicationDate;
+    @Column(name = "synopsis",nullable = false)
+    @Lob
     private String synopsis;
+    @Column(name = "poster_path",nullable = false)
     @JsonProperty("poster_path")
     private String posterPath;
+    @Column(name = "genre",nullable = false)
     private String genre;
-    @JsonProperty("inclusion_date")
-    private LocalDateTime inclusionDate;
+    @Column(name = "created_at")
+    @JsonProperty("created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     public Book(){};
 
-    public Book(String isbn, String tittle, String author, String publisher, LocalDate publicationDate, String synopsis, String posterPath, LocalDateTime inclusionDate, String genre) {
+    public Book(String isbn, String title, String author, String publisher, LocalDate publicationDate, String synopsis, String posterPath, LocalDateTime inclusionDate, String genre) {
         this.isbn = isbn;
-        this.tittle = tittle;
+        this.title = title;
         this.author = author;
         this.publisher = publisher;
         this.publicationDate = publicationDate;
         this.synopsis = synopsis;
         this.posterPath = posterPath;
-        this.inclusionDate = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
         this.genre = genre;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getIsbn() {
@@ -44,12 +72,12 @@ public class Book extends PanacheEntity {
         this.isbn = isbn;
     }
 
-    public String getTittle() {
-        return tittle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setTittle(String tittle) {
-        this.tittle = tittle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getAuthor() {
@@ -93,7 +121,7 @@ public class Book extends PanacheEntity {
     }
 
     public LocalDateTime getInclusionDate() {
-        return inclusionDate;
+        return createdAt;
     }
 
 

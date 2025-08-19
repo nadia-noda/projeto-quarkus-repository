@@ -5,158 +5,137 @@
     <title>Biblioteca</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .book-poster {
-          width: 80px;
+        .book-img {
+          width: 100px;
           height: auto;
           border-radius: 4px;
         }
-        .table td, .table th {
-          vertical-align: middle;
+        .form-section {
+          display: none;
         }
     </style>
 </head>
-<body class="bg-light">
-<div class="container mt-5">
-    <h1 class="mb-4 text-center">📚 Biblioteca</h1>
+<body class="container mt-5">
+<h1 class="mb-4 text-center">📚 Biblioteca</h1>
 
-    <!-- Botão para abrir o formulário -->
-    <div class="text-center mb-4">
-        <button class="btn btn-success" onclick="toggleForm()">➕ Adicionar Livro</button>
-    </div>
-
-    <!-- Formulário oculto -->
-    <div id="form-container" class="card mb-4" style="display: none;">
-        <div class="card-header">📘 Novo Livro</div>
-        <div class="card-body">
-            <form id="book-form">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Título</label>
-                        <input type="text" class="form-control" name="tittle" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Autor</label>
-                        <input type="text" class="form-control" name="author" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Editora</label>
-                        <input type="text" class="form-control" name="publisher">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Gênero</label>
-                        <input type="text" class="form-control" name="genre">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">ISBN</label>
-                        <input type="text" class="form-control" name="isbn">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Data de Publicação</label>
-                        <input type="date" class="form-control" name="publication_date">
-                    </div>
-                    <div class="col-md-12">
-                        <label class="form-label">Sinopse</label>
-                        <textarea class="form-control" name="synopsis" rows="3"></textarea>
-                    </div>
-                    <div class="col-md-12">
-                        <label class="form-label">URL da Imagem</label>
-                        <input type="text" class="form-control" name="poster_path">
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary mt-3">Salvar Livro</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Tabela de livros -->
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover table-striped">
-            <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Imagem</th>
-                <th>Título</th>
-                <th>Autor</th>
-                <th>Editora</th>
-                <th>Gênero</th>
-                <th>ISBN</th>
-                <th>Data de Publicação</th>
-                <th>Sinopse</th>
-                <th>Data de Inclusão</th>
-            </tr>
-            </thead>
-            <tbody id="book-table-body">
-            <!-- Linhas serão inseridas via JavaScript -->
-            </tbody>
-        </table>
-    </div>
+<!-- Botão para incluir novo livro -->
+<div class="text-center mb-4">
+    <button class="btn btn-success" onclick="toggleForm()">➕ Incluir novo livro</button>
 </div>
+
+<!-- Formulário de inclusão -->
+<div id="form-section" class="form-section border p-4 mb-4">
+    <h4>📘 Novo Livro</h4>
+    <form id="book-form">
+        <div class="row g-3">
+            <div class="col-md-6"><input class="form-control" name="title" placeholder="Título" required></div>
+            <div class="col-md-6"><input class="form-control" name="author" placeholder="Autor" required></div>
+            <div class="col-md-6"><input class="form-control" name="publisher" placeholder="Editora"></div>
+            <div class="col-md-6"><input class="form-control" name="genre" placeholder="Gênero"></div>
+            <div class="col-md-6"><input class="form-control" name="isbn" placeholder="ISBN"></div>
+            <div class="col-md-6"><input class="form-control" name="publication_date" type="date" placeholder="Data de Publicação"></div>
+            <div class="col-md-12"><textarea class="form-control" name="synopsis" placeholder="Sinopse" rows="3"></textarea></div>
+            <div class="col-md-12"><input class="form-control" name="poster_path" placeholder="URL da Imagem"></div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Salvar</button>
+    </form>
+</div>
+
+<!-- Campo de pesquisa -->
+<div class="mb-4">
+    <input type="text" id="searchInput" class="form-control" placeholder="🔍 Pesquisar por título, autor, gênero...">
+</div>
+
+<!-- Lista de livros -->
+<div id="book-list" class="row g-4"></div>
 
 <script>
     function toggleForm() {
-      const formContainer = document.getElementById("form-container");
-      formContainer.style.display = formContainer.style.display === "none" ? "block" : "none";
-    }
-
-    function loadBooks() {
-      fetch("http://localhost:8080/books")
-        .then(response => response.json())
-        .then(data => {
-          const tbody = document.getElementById("book-table-body");
-          tbody.innerHTML = "";
-          data.forEach(book => {
-            const row = `
-              <tr>
-                <td>${book.id}</td>
-                <td><img src="${book.poster_path}" alt="Capa" class="book-poster"></td>
-                <td>${book.tittle}</td>
-                <td>${book.author}</td>
-                <td>${book.publisher}</td>
-                <td>${book.genre}</td>
-                <td>${book.isbn}</td>
-                <td>${book.publication_date}</td>
-                <td>${book.synopsis}</td>
-                <td>${book.inclusion_date}</td>
-              </tr>`;
-            tbody.innerHTML += row;
-          });
-        })
-        .catch(error => {
-          console.error("Erro ao carregar dados:", error);
-          document.getElementById("book-table-body").innerHTML = `
-            <tr><td colspan="10" class="text-center text-danger">Erro ao carregar dados.</td></tr>`;
-        });
+      const form = document.getElementById("form-section");
+      form.style.display = form.style.display === "none" ? "block" : "none";
     }
 
     document.getElementById("book-form").addEventListener("submit", function(e) {
       e.preventDefault();
       const formData = new FormData(e.target);
       const book = {};
-      formData.forEach((value, key) => book[key] = value);
-
-      fetch("http://localhost:8080/books", {
+      formData.forEach((value, key) => {
+        if (key === "publication_date"){
+            const isoDate = value ? new Date(value).toISOString().split("T")[0] : null;
+            book[key] = isoDate;
+            } else {
+                book[key] = value;
+            }
+          });
+      fetch("http://localhost:8080/biblioteca", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(book)
       })
-      .then(response => {
-        if (response.ok) {
-          alert("Livro cadastrado com sucesso!");
-          e.target.reset(); // limpa o formulário
-          document.getElementById("form-container").style.display = "none"; // esconde o formulário
-          loadBooks(); // recarrega a tabela
-        } else {
-          alert("Erro ao cadastrar livro.");
-        }
+      .then(res => {
+        if (!res.ok) throw new Error("Erro ao salvar livro");
+        return res.json();
       })
-      .catch(error => {
-        console.error("Erro:", error);
-        alert("Erro na requisição.");
+      .then(() => {
+        e.target.reset();
+        toggleForm();
+        loadBooks();
+      })
+      .catch(err => alert("Erro ao cadastrar livro."));
+    });
+
+    function loadBooks() {
+      fetch("http://localhost:8080/biblioteca")
+        .then(res => res.json())
+        .then(books => {
+          const list = document.getElementById("book-list");
+          list.innerHTML = "";
+          books.forEach(book => {
+            const card = document.createElement("div");
+            card.className = "col-md-6";
+            card.innerHTML = `
+              <div class="card h-100">
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="${book.poster_path}" class="img-fluid book-img" alt="Capa">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title">${book.title}</h5>
+                      <p class="card-text"><strong>Autor:</strong> ${book.author}</p>
+                      <p class="card-text"><strong>Editora:</strong> ${book.publisher}</p>
+                      <p class="card-text"><strong>Gênero:</strong> ${book.genre}</p>
+                      <p class="card-text"><strong>ISBN:</strong> ${book.isbn}</p>
+                      <p class="card-text"><strong>Publicação:</strong> ${book.publication_date}</p>
+                      <p class="card-text"><strong>Sinopse:</strong> ${book.synopsis}</p>
+                      <p class="card-text"><strong>Inclusão:</strong> ${book.inclusion_date || ''}</p>
+                      <button class="btn btn-warning btn-sm mt-2" onclick="editarLivro(${book.id})">Atualizar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+            list.appendChild(card);
+          });
+        })
+        .catch(err => console.error("Erro ao carregar livros:", err));
+    }
+
+    function editarLivro(id) {
+      alert("Função de edição ainda não implementada. ID do livro: " + id);
+      // Aqui você pode abrir um modal ou reaproveitar o formulário para edição
+    }
+
+    document.getElementById("searchInput").addEventListener("input", function() {
+      const termo = this.value.toLowerCase();
+      const cards = document.querySelectorAll("#book-list .card");
+      cards.forEach(card => {
+        const texto = card.innerText.toLowerCase();
+        card.parentElement.style.display = texto.includes(termo) ? "block" : "none";
       });
     });
 
-    // Carrega os livros ao abrir a página
-    loadBooks();
+    window.onload = loadBooks;
 </script>
 </body>
 </html>
