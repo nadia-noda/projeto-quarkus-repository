@@ -1,6 +1,5 @@
 package tech.ada.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +20,7 @@ public class Book {
     private Long id;
     @Column(name = "isbn", nullable = false)
     private String isbn;
-    @Column(name = "tittle", nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
     @Column(name = "author",nullable = false)
     private String author;
@@ -42,9 +41,9 @@ public class Book {
     @JsonProperty("created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public Book(){};
+    public Book(){}
 
-    public Book(String isbn, String title, String author, String publisher, LocalDate publicationDate, String synopsis, String posterPath, LocalDateTime inclusionDate, String genre) {
+    public Book(String isbn, String title, String author, String publisher, LocalDate publicationDate, String synopsis, String posterPath, LocalDateTime createdAt, String genre) {
         this.isbn = isbn;
         this.title = title;
         this.author = author;
