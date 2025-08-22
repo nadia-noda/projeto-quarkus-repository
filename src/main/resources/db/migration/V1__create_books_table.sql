@@ -7,5 +7,6 @@ CREATE TABLE book (
     publication_date DATE,
     synopsis TEXT,
     poster_path VARCHAR(255),
-    genre VARCHAR(100)
+    genre VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
