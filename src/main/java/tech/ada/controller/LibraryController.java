@@ -2,11 +2,7 @@ package tech.ada.controller;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.jboss.resteasy.reactive.RestPath;
@@ -33,7 +29,7 @@ public class LibraryController {
     }
 
     @GET
-    public Response getBook(){
+    public Response getBooks(){
         List<BookDTO> books = bookService.getAll();
         return  Response
                 .status(Response.Status.OK)
@@ -56,6 +52,23 @@ public class LibraryController {
                 .entity(bookService.getById(id))
                 .build();
     }
+
+    @Path("/{id}")
+    @PUT
+    @Transactional
+    public Response updateBook(@RestPath Long id, BookDTO bookDTO) {
+        bookService.update(id, bookDTO);
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @Path("/{id}")
+    @DELETE
+    @Transactional
+    public Response deleteBook(@RestPath Long id) {
+        bookService.delete(id);
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
 //teste Helbert
 }
 

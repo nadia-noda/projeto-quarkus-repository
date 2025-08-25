@@ -22,6 +22,21 @@ public class BookMapper {
         return book;
     }
 
+    public static Book updateBook(BookDTO bookDTO, Book book) {
+        if (bookDTO == null) {
+            return null;
+        }
+        book.setIsbn(bookDTO.getIsbn());
+        book.setAuthor(bookDTO.getAuthor());
+        book.setGenre(bookDTO.getGenre());
+        book.setPublisher(bookDTO.getPublisher());
+        book.setSynopsis(bookDTO.getSynopsis());
+        book.setTitle(bookDTO.getTitle());
+        book.setPosterPath(bookDTO.getPosterPath());
+        book.setPublicationDate(bookDTO.getPublicationDate());
+        return book;
+    }
+
     //puxa os dados de Book para bookDTO, em caso de consulta
     public static BookDTO toDTO(Book book) {
         if (book == null){

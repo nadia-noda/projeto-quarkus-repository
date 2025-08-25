@@ -8,6 +8,7 @@ import tech.ada.dto.BookDTO;
 import tech.ada.dto.BookMapper;
 import tech.ada.exception.NoIdFound;
 import tech.ada.exception.TitleAlreadyExistsException;
+import tech.ada.exception.TitleNotExistsException;
 import tech.ada.model.Book;
 import tech.ada.repoitory.BookRepository;
 import java.util.Optional;
@@ -38,16 +39,31 @@ public class BookService {
 
 
     public BookDTO getById(Long id){
-        Book book = repository.findById(id);
-        if(book == null){
-            throw new NoIdFound("TItle with id "+id+" not foud");
-        }
-        return BookMapper.toDTO(book);
+        return BookMapper.toDTO(findById(id));
     }
 
     public List<BookDTO> getAll(){
         return repository.findAll()
                 .list().stream().map(BookMapper::toDTO).toList();
+    }
+
+    public void update(Long id, BookDTO bookDTO) {
+        Book book = findById(id);
+        BookMapper.updateBook(bookDTO, book);
+    }
+
+    public void delete(Long id) {
+        Book book = findById(id);
+        repository.delete(book);
+
+    }
+
+    private Book findById(Long id) {
+        Book book = repository.findById(id);
+        if (book == null){
+            throw new TitleNotExistsException("Title wiht id" + id + "not found");
+        }
+        return book;
     }
 
 }
