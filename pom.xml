@@ -76,6 +76,11 @@
             <artifactId>quarkus-flyway</artifactId>
         </dependency>
 
+        <!-- VALIDAÇÃO -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-hibernate-validator</artifactId>
+        </dependency>
 
     </dependencies>
 

@@ -1,12 +1,16 @@
 package tech.ada.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class BookDTO {
 
+
     public String isbn;
+    @NotBlank(message = "Title cannot be empty")
     public String title;
     public String author;
     public String publisher;
@@ -16,6 +20,7 @@ public class BookDTO {
     @JsonProperty("poster_path")
     public String posterPath;
     public String genre;
+
 
     public String getIsbn() {
         return isbn;
@@ -80,5 +85,7 @@ public class BookDTO {
     public void setGenre(String genre) {
         this.genre = genre;
     }
+
+
 }
 
