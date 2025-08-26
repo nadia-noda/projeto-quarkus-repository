@@ -2,16 +2,18 @@ package tech.ada.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class BookDTO {
 
-
+    @Pattern(regexp = "\\d{13}", message = "ISBN must be 13 digits")
     public String isbn;
     @NotBlank(message = "Title cannot be empty")
     public String title;
+    @NotBlank(message = "Author cannot be empty")
     public String author;
     public String publisher;
     @JsonProperty("publication_date")
@@ -34,7 +36,7 @@ public class BookDTO {
         return title;
     }
 
-    public void setTittle(String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 

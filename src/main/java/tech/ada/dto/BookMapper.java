@@ -45,7 +45,7 @@ public class BookMapper {
         BookDTO bookDTO = new BookDTO();
         bookDTO.setIsbn(book.getIsbn());
         bookDTO.setAuthor(book.getAuthor());
-        bookDTO.setTittle(book.getTitle());
+        bookDTO.setTitle(book.getTitle());
         bookDTO.setGenre(book.getGenre());
         bookDTO.setPublisher(book.getPublisher());
         bookDTO.setPublicationDate(book.getPublicationDate());

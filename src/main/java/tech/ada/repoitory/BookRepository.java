@@ -17,4 +17,10 @@ public class BookRepository implements PanacheRepository<Book> {
         return find("id",id).firstResult();
     }
 
+    public Optional<Book> findByIsbn(String isbn) {
+        return find("isbn", isbn).firstResultOptional();
+    }
+
+
+
 }

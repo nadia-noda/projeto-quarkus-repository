@@ -82,6 +82,12 @@
             <artifactId>quarkus-hibernate-validator</artifactId>
         </dependency>
 
+        <!-- DOCUMENTACAO -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-smallrye-openapi</artifactId>
+        </dependency>
+
     </dependencies>
 
 
