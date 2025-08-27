@@ -37,6 +37,15 @@ public class BookMapper {
         return book;
     }
 
+    public static Book updateParcialBook(BookUpdateDTO bookUpdateDTO, Book book) {
+        if (bookUpdateDTO == null) {
+            return null;
+        }
+        book.setSynopsis(bookUpdateDTO.getSynopsis());
+        book.setPosterPath(bookUpdateDTO.getPosterPath());
+        return book;
+    }
+
     //puxa os dados de Book para bookDTO, em caso de consulta
     public static BookDTO toDTO(Book book) {
         if (book == null){

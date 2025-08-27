@@ -6,6 +6,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import tech.ada.dto.BookDTO;
 import tech.ada.dto.BookMapper;
+import tech.ada.dto.BookUpdateDTO;
 import tech.ada.exception.IsbnAlreadyExistsException;
 import tech.ada.exception.NoIdFound;
 import tech.ada.exception.TitleAlreadyExistsException;
@@ -67,6 +68,11 @@ public class BookService {
         }
 
         BookMapper.updateBook(bookDTO, book);
+    }
+
+    public void updateParcial(Long id, BookUpdateDTO bookUpdateDTO) {
+        Book book = findById(id);
+        BookMapper.updateParcialBook(bookUpdateDTO, book);
     }
 
     public void delete(Long id) {

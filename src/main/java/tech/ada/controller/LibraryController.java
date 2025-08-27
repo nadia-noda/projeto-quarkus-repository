@@ -6,9 +6,13 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.reactive.RestPath;
 import tech.ada.dto.BookMapper;
+import tech.ada.dto.BookUpdateDTO;
 import tech.ada.model.Book;
 import tech.ada.dto.BookDTO;
 import tech.ada.repoitory.BookRepository;
@@ -65,7 +69,17 @@ public class LibraryController {
     @Transactional
     public Response updateBook(@RestPath Long id, @Valid BookDTO bookDTO) {
         bookService.update(id, bookDTO);
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @Operation(summary = "Altera parcialmente o livro", description = "Altera parcialmente livro da biblioteca")
+    @Path("/{id}")
+    @PATCH
+    @Transactional
+    public Response updateParcialBook(@RestPath Long id, @Valid BookUpdateDTO bookUpdateDTO) {
+
+        bookService.updateParcial(id, bookUpdateDTO);
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @Operation(summary = "Exclui livro", description = "Exclui livro da biblioteca")
