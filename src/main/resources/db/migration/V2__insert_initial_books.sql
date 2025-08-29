@@ -1,6 +1,6 @@
 INSERT INTO book (isbn, title, author, publisher, publication_date, synopsis, poster_path, genre) VALUES
-('9780062316097', 'Sapiens', 'Yuval Noah Harari', 'Harper', '2015-02-10', 'Uma breve história da humanidade...', 'https://example.com/images/sapiens.jpg', 'História'),
-('9780439139601', 'Harry Potter e o Prisioneiro de Azkaban', 'J.K. Rowling', 'Rocco', '2000-07-08', 'Harry retorna a Hogwarts...', 'https://example.com/images/hp-azkaban.jpg', 'Fantasia'),
-('9788547000240', 'O Homem que Calculava', 'Malba Tahan', 'Record', '2013-01-01', 'As aventuras matemáticas de Beremiz Samir...', 'https://example.com/images/homem-calculava.jpg', 'Ficção matemática'),
-('9788535914849', 'Ensaio sobre a cegueira', 'José Saramago', 'Companhia das Letras', '1995-10-15', 'Uma epidemia de cegueira súbita transforma a sociedade...', 'https://example.com/images/cegueira.jpg', 'Drama'),
-('9780143127741', 'The Martian', 'Andy Weir', 'Crown Publishing Group', '2014-02-11', 'Após um acidente em Marte, Mark Watney precisa sobreviver sozinho.', 'https://example.com/images/the-martian.jpg', 'Ficção científica');
+('9780062316097', 'Sapiens', 'Yuval Noah Harari', 'Harper', '2015-02-10', 'Uma breve história da humanidade...', 'https://checkout.livrariavanguarda.com.br/resizer/view/1080/1080/false/true/167773.jpg', 'História'),
+('9780439139601', 'Harry Potter e o Prisioneiro de Azkaban', 'J.K. Rowling', 'Rocco', '2000-07-08', 'Harry retorna a Hogwarts...', 'https://3.bp.blogspot.com/-TJUxg4B09bY/UrJHlwGW0tI/AAAAAAAACFs/ur5p4tBCcfA/s1600/hp3.jpg', 'Fantasia'),
+('9788547000240', 'O Homem que Calculava', 'Malba Tahan', 'Record', '2013-01-01', 'As aventuras matemáticas de Beremiz Samir...', 'https://m.media-amazon.com/images/I/71CKylTw0+L._SY425_.jpg', 'Ficção matemática'),
+('9788535914849', 'Ensaio sobre a cegueira', 'José Saramago', 'Companhia das Letras', '1995-10-15', 'Uma epidemia de cegueira súbita transforma a sociedade...', 'https://m.media-amazon.com/images/I/71Hr1-by3UL._UF1000,1000_QL80_.jpg', 'Drama'),
+('9780143127741', 'The Martian', 'Andy Weir', 'Crown Publishing Group', '2014-02-11', 'Após um acidente em Marte, Mark Watney precisa sobreviver sozinho.', 'https://www.editoraarqueiro.com.br/media/livros_livro/perdido-em-marte_capa-web.jpg.200x300_q85_upscale.jpg', 'Ficção científica');

@@ -44,7 +44,8 @@ public class Book {
 
     public Book(){}
 
-    public Book(String isbn, String title, String author, String publisher, LocalDate publicationDate, String synopsis, String posterPath, LocalDateTime createdAt, String genre) {
+    public Book(Long id, String isbn, String title, String author, String publisher, LocalDate publicationDate, String synopsis, String posterPath, LocalDateTime createdAt, String genre) {
+        this.id = id;
         this.isbn = isbn;
         this.title = title;
         this.author = author;

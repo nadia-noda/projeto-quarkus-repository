@@ -1,21 +1,17 @@
 package tech.ada.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Validator;
+import jakarta.validation.Valid;
 import tech.ada.dto.BookDTO;
 import tech.ada.dto.BookMapper;
 import tech.ada.dto.BookUpdateDTO;
 import tech.ada.exception.IsbnAlreadyExistsException;
-import tech.ada.exception.NoIdFound;
 import tech.ada.exception.TitleAlreadyExistsException;
 import tech.ada.exception.TitleNotExistsException;
 import tech.ada.model.Book;
-import tech.ada.repoitory.BookRepository;
+import tech.ada.repository.BookRepository;
 import java.util.Optional;
 import java.util.List;
-import java.util.Set;
 
 import static io.quarkus.hibernate.orm.panache.PanacheEntityBase.findById;
 
@@ -38,7 +34,6 @@ public class BookService {
             throw new IsbnAlreadyExistsException("ISBN already registered");
         }
 
-
         Book book = BookMapper.toEntity(bookDTO);
         repository.persist(book);
         return book;
@@ -48,6 +43,7 @@ public class BookService {
     public BookDTO getById(Long id){
         return BookMapper.toDTO(findById(id));
     }
+
 
     public List<BookDTO> getAll(){
         return repository.findAll()
@@ -90,5 +86,36 @@ public class BookService {
     }
 
 
+    public Book getByIsbn(String isbn) {
+        Optional<Book> optionalBook = repository.findByIsbn(isbn);
+        if (optionalBook.isEmpty()) {
+            throw new TitleNotExistsException("Title wiht isbn" + isbn + "not found");
+        }
+        return optionalBook.get();
+    }
 
+    public void updateParcialIsbn(String isbn, BookUpdateDTO bookUpdateDTO) {
+        Optional<Book> optionalBook = repository.findByIsbn(isbn);
+        if (optionalBook.isEmpty()) {
+            throw new TitleNotExistsException("Title wiht isbn" + isbn + "not found");
+        }
+        BookMapper.updateParcialBook(bookUpdateDTO,optionalBook.get());
+    }
+    
+    public void deleteByIsbn(String isbn) {
+        Optional<Book> optionalBook = repository.findByIsbn(isbn);
+        if (optionalBook.isEmpty()){
+            throw new TitleNotExistsException("Title wiht isbn" + isbn + "not found");
+        }
+        repository.delete(optionalBook.get());
+
+    }
+
+
+    public void updateParcial(String isbn, @Valid BookUpdateDTO bookUpdateDTO) {
+    }
 }
+
+
+
+

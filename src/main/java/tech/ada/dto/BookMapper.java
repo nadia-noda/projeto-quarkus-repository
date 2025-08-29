@@ -22,6 +22,7 @@ public class BookMapper {
         return book;
     }
 
+
     public static Book updateBook(BookDTO bookDTO, Book book) {
         if (bookDTO == null) {
             return null;
@@ -41,8 +42,12 @@ public class BookMapper {
         if (bookUpdateDTO == null) {
             return null;
         }
+        if (bookUpdateDTO.getSynopsis() != null && !bookUpdateDTO.getSynopsis().isBlank()){
         book.setSynopsis(bookUpdateDTO.getSynopsis());
+        }
+        if (bookUpdateDTO.getPosterPath() != null && !bookUpdateDTO.getPosterPath().isBlank()){
         book.setPosterPath(bookUpdateDTO.getPosterPath());
+        }
         return book;
     }
 
@@ -59,6 +64,7 @@ public class BookMapper {
         bookDTO.setPublisher(book.getPublisher());
         bookDTO.setPublicationDate(book.getPublicationDate());
         bookDTO.setSynopsis(book.getSynopsis());
+        bookDTO.setPosterPath(book.getPosterPath());
 
         return bookDTO;
     }

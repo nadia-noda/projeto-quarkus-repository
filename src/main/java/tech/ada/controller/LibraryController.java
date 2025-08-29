@@ -1,21 +1,15 @@
 package tech.ada.controller;
-import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.media.Content;
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.reactive.RestPath;
-import tech.ada.dto.BookMapper;
 import tech.ada.dto.BookUpdateDTO;
 import tech.ada.model.Book;
 import tech.ada.dto.BookDTO;
-import tech.ada.repoitory.BookRepository;
 import tech.ada.service.BookService;
 
 import java.util.List;
@@ -77,7 +71,6 @@ public class LibraryController {
     @PATCH
     @Transactional
     public Response updateParcialBook(@RestPath Long id, @Valid BookUpdateDTO bookUpdateDTO) {
-
         bookService.updateParcial(id, bookUpdateDTO);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
@@ -90,6 +83,36 @@ public class LibraryController {
         bookService.delete(id);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
+
+
+    @GET
+    @Path("/isbn/{isbn}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response buscarLivroPorIsbn(@PathParam("isbn") String isbn) {
+        Book book = bookService.getByIsbn(isbn);
+        if (book == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(book).build();
+    }
+
+
+    @PATCH
+    @Transactional
+    @Path("/isbn/{isbn}")
+    public Response updateParcialBookIsbn(@PathParam ("isbn") String isbn, @Valid BookUpdateDTO bookUpdateDTO) {
+        bookService.updateParcialIsbn(isbn,bookUpdateDTO);
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @DELETE
+    @Transactional
+    @Path("/isbn/{isbn}")
+    public Response deleteBookByIsbn(@PathParam("isbn") String isbn){
+        bookService.deleteByIsbn(isbn);
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
 
 }
 

@@ -5,25 +5,19 @@
     <title>Biblioteca</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .book-img {
-          width: 100px;
-          height: auto;
-          border-radius: 4px;
-        }
-        .form-section {
-          display: none;
-        }
+        .book-img { width: 100px; height: auto; border-radius: 4px; }
+        .form-section { display: none; }
     </style>
 </head>
 <body class="container mt-5">
+
 <h1 class="mb-4 text-center">📚 Biblioteca</h1>
 
-<!-- Botão para incluir novo livro -->
 <div class="text-center mb-4">
-    <button class="btn btn-success" onclick="toggleForm()">➕ Incluir novo livro</button>
+    <button class="btn btn-success" onclick="abrirFormulario()">➕ Incluir novo livro</button>
 </div>
 
-<!-- Formulário de inclusão -->
+<!-- Form inclusão -->
 <div id="form-section" class="form-section border p-4 mb-4">
     <h4>📘 Novo Livro</h4>
     <form id="book-form">
@@ -32,110 +26,279 @@
             <div class="col-md-6"><input class="form-control" name="author" placeholder="Autor" required></div>
             <div class="col-md-6"><input class="form-control" name="publisher" placeholder="Editora"></div>
             <div class="col-md-6"><input class="form-control" name="genre" placeholder="Gênero"></div>
-            <div class="col-md-6"><input class="form-control" name="isbn" placeholder="ISBN"></div>
-            <div class="col-md-6"><input class="form-control" name="publication_date" type="date" placeholder="Data de Publicação"></div>
+            <div class="col-md-6"><input class="form-control" name="isbn" placeholder="ISBN" required></div>
+            <div class="col-md-6"><input class="form-control" name="publication_date" type="date"></div>
             <div class="col-md-12"><textarea class="form-control" name="synopsis" placeholder="Sinopse" rows="3"></textarea></div>
             <div class="col-md-12"><input class="form-control" name="poster_path" placeholder="URL da Imagem"></div>
         </div>
-        <button type="submit" class="btn btn-primary mt-3">Salvar</button>
+        <button type="submit" class="btn btn-primary mt-3" >Salvar</button>
+        <button type="button" class="btn btn-secondary mt-3 ms-2" onclick="fecharFormulario()">Cancelar</button>
     </form>
 </div>
 
-<!-- Campo de pesquisa -->
+<!-- Form edição parcial -->
+<div id="edit-section" class="form-section border p-4 mb-4">
+    <h4>✏️ Editar Sinopse e Imagem</h4>
+    <form id="edit-form">
+        <input type="hidden" id="id" name="id">
+        <div class="mb-3">
+            <label class="form-label" for="synopsis">Sinopse</label>
+            <textarea class="form-control" id="synopsis" name="synopsis" rows="3" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="poster_path">URL da Imagem</label>
+            <input class="form-control" id="poster_path" name="poster_path" required>
+        </div>
+        <button type="submit" class="btn btn-warning">Salvar Alterações</button>
+        <button type="button" class="btn btn-secondary ms-2" onclick="fecharEdicao()">Cancelar</button>
+    </form>
+</div>
+
+<!-- Form edição completa -->
+<div id="full-edit-section" class="form-section border p-4 mb-4">
+    <h4>📝 Editar Livro Completo</h4>
+    <form id="full-edit-form">
+        <input type="hidden" name="id">
+        <div class="row g-3">
+            <div class="col-md-6"><input class="form-control" name="title" required></div>
+            <div class="col-md-6"><input class="form-control" name="author" required></div>
+            <div class="col-md-6"><input class="form-control" name="publisher"></div>
+            <div class="col-md-6"><input class="form-control" name="genre"></div>
+            <div class="col-md-6"><input class="form-control" name="isbn"></div>
+            <div class="col-md-6"><input class="form-control" name="publication_date" type="date"></div>
+            <div class="col-md-12"><textarea class="form-control" name="synopsis" rows="3"></textarea></div>
+            <div class="col-md-12"><input class="form-control" name="poster_path"></div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Salvar Tudo</button>
+        <button type="button" class="btn btn-secondary mt-3 ms-2" onclick="fecharEdicaoCompleta()">Cancelar</button>
+    </form>
+</div>
+
 <div class="mb-4">
     <input type="text" id="searchInput" class="form-control" placeholder="🔍 Pesquisar por título, autor, gênero...">
 </div>
 
-<!-- Lista de livros -->
 <div id="book-list" class="row g-4"></div>
 
 <script>
-    function toggleForm() {
-      const form = document.getElementById("form-section");
-      form.style.display = form.style.display === "none" ? "block" : "none";
+    function abrirFormulario(){ document.getElementById("form-section").style.display="block"; }
+    function fecharFormulario(){ document.getElementById("form-section").style.display="none"; }
+    function fecharEdicao(){ document.getElementById("edit-section").style.display="none"; }
+    function fecharEdicaoCompleta(){ document.getElementById("full-edit-section").style.display="none"; }
+
+    function buscarLivroPorIsbn(isbn, callback){
+      fetch(`http://localhost:8080/biblioteca/isbn/${isbn}`)
+        .then(res => res.json())
+        .then(callback)
+        .catch(()=>alert("Livro não encontrado pelo ISBN."));
     }
 
-    document.getElementById("book-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const book = {};
-      formData.forEach((value, key) => {
-        if (key === "publication_date"){
-            const isoDate = value ? new Date(value).toISOString().split("T")[0] : null;
-            book[key] = isoDate;
-            } else {
-                book[key] = value;
-            }
-          });
-      fetch("http://localhost:8080/biblioteca", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(book)
-      })
+function abrirEdicaoParcialPorIsbn(isbn) {
+  fetch(`http://localhost:8080/biblioteca/isbn/${isbn}`)
+    .then(res => {
+      if (!res.ok) throw new Error("Não foi possível carregar os dados do livro.");
+      return res.json();
+    })
+    .then(book => {
+      const f = document.getElementById("edit-form");
+      f.reset();
+      f.elements["id"].value = book.id;
+      f.elements["synopsis"].value = book.synopsis ?? "";
+      f.elements["poster_path"].value = book.poster_path ?? "";
+      document.getElementById("edit-section").style.display = "block";
+      loadBooks();
+    })
+    .catch(err => {
+      console.error("Erro ao abrir edição parcial:", err);
+      alert(err.message || "Erro inesperado ao abrir edição.");
+    });
+}
+
+
+
+
+    function abrirEdicaoCompletaPorIsbn(isbn){
+    fetch(`/biblioteca/idporisbn/${isbn}`)
       .then(res => {
-        if (!res.ok) throw new Error("Erro ao salvar livro");
-        return res.json();
+        if (!res.ok) throw new Error("Não foi possível carregar os dados do livro.");
+            return res.json();
       })
-      .then(() => {
-        e.target.reset();
-        toggleForm();
-        loadBooks();
+      .then(id => {
+        return fetch(`/biblioteca/${id}`)
+        .then(res => {
+            if (!res.ok) throw new Error("Não foi possível carregar os dados do livro.");
+            return res.json();
+        });
+        })
+        .then(book => {
+        const f=document.getElementById("full-edit-form");
+        document.getElementById("full-edit-section").style.display="block";
+        f.reset();
+        f.elements["id"].value=book.id;
+        f.elements["title"].value=book.title;
+        f.elements["author"].value=book.author;
+        f.elements["publisher"].value=book.publisher;
+        f.elements["genre"].value=book.genre;
+        f.elements["isbn"].value=book.isbn;
+        f.elements["publication_date"].value=book.publication_date;
+        f.elements["synopsis"].value=book.synopsis;
+        f.elements["poster_path"].value=book.poster_path;
       })
-      .catch(err => alert("Erro ao cadastrar livro."));
+      .catch(err => alert(err.message));
+    }
+
+function excluirLivroPorIsbn(isbn) {
+  fetch(`http://localhost:8080/biblioteca/isbn/${isbn}`, {
+    method: "DELETE"
+  })
+  .then(response => {
+    if (response.ok) {
+      alert("Livro deletado com sucesso!");
+       loadBooks();
+    } else {
+      alert("Erro ao deletar livro.");
+    }
+  });
+}
+
+
+    document.getElementById("book-form").addEventListener("submit", e=>{
+      e.preventDefault();
+      const data=new FormData(e.target), book={};
+      data.forEach((v,k)=>{
+        book[k]=k==="publication_date" && v ? new Date(v).toISOString().split("T")[0] : v.trim();
+      });
+      fetch("http://localhost:8080/biblioteca", {
+        method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(book)
+      }).then(r=>r.ok?r.json():Promise.reject())
+        .then(()=>{ e.target.reset(); fecharFormulario(); loadBooks(); });
     });
 
-    function loadBooks() {
-      fetch("http://localhost:8080/biblioteca")
-        .then(res => res.json())
-        .then(books => {
-          const list = document.getElementById("book-list");
-          list.innerHTML = "";
-          books.forEach(book => {
-            const card = document.createElement("div");
-            card.className = "col-md-6";
-            card.innerHTML = `
-              <div class="card h-100">
-                <div class="row g-0">
-                  <div class="col-md-4">
-                    <img src="${book.poster_path}" class="img-fluid book-img" alt="Capa">
-                  </div>
-                  <div class="col-md-8">
-                    <div class="card-body">
-                      <h5 class="card-title">${book.title}</h5>
-                      <p class="card-text"><strong>Autor:</strong> ${book.author}</p>
-                      <p class="card-text"><strong>Editora:</strong> ${book.publisher}</p>
-                      <p class="card-text"><strong>Gênero:</strong> ${book.genre}</p>
-                      <p class="card-text"><strong>ISBN:</strong> ${book.isbn}</p>
-                      <p class="card-text"><strong>Publicação:</strong> ${book.publication_date}</p>
-                      <p class="card-text"><strong>Sinopse:</strong> ${book.synopsis}</p>
-                      <p class="card-text"><strong>Inclusão:</strong> ${book.inclusion_date || ''}</p>
-                      <button class="btn btn-warning btn-sm mt-2" onclick="editarLivro(${book.id})">Atualizar</button>
-                    </div>
+
+
+document.getElementById("edit-form").addEventListener("submit", function (e) {
+  e.preventDefault(); // evita reload da página
+  const f = e.target;
+  const id = f.elements["id"].value;
+  if (!id) {
+    alert("ID do livro não definido!");
+    return;
+  }
+  const payload = {
+    synopsis: f.elements["synopsis"].value.trim(),
+    poster_path: f.elements["poster_path"].value.trim() // camelCase para o DTO Java
+  };
+
+  fetch(`/biblioteca/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("Erro ao salvar alterações.");
+      alert("Alterações salvas com sucesso!");
+      document.getElementById("edit-section").style.display = "none";
+      loadBooks();
+    })
+    .catch(err => alert(err.message));
+});
+
+
+
+document.getElementById("full-edit-form").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const f = e.target;
+  const id = f.elements["id"].value;
+
+  const payload = {
+    title: f.elements["title"].value.trim(),
+    author: f.elements["author"].value.trim(),
+    publisher: f.elements["publisher"].value.trim(),
+    genre: f.elements["genre"].value.trim(),
+    isbn: f.elements["isbn"].value.trim(),
+    publication_date: f.elements["publication_date"].value,
+    synopsis: f.elements["synopsis"].value.trim(),
+    posterPath: f.elements["poster_path"].value.trim()
+  };
+
+  fetch(`/biblioteca/${id}`, {
+    method: "PUT", // use PATCH se sua API for parcial
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("Erro ao salvar alterações completas.");
+      alert("Livro atualizado com sucesso!");
+      document.getElementById("full-edit-section").style.display = "none";
+      loadBooks();
+    })
+    .catch(err => alert(err.message));
+});
+
+  function loadBooks() {
+    fetch("http://localhost:8080/biblioteca")
+      .then(res => res.json())
+      .then(books => {
+        const list = document.getElementById("book-list");
+        list.innerHTML = "";
+
+        books.forEach(book => {
+          const card = document.createElement("div");
+          card.className = "col-md-6";
+          card.innerHTML = `
+            <div class="card h-100">
+              <div class="row g-0">
+                <div class="col-md-4">
+                  <img src="${book.poster_path}" alt="Capa" class="img-fluid book-img">
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title">${book.title}</h5>
+                    <p class="card-text"><strong>Autor:</strong> ${book.author}</p>
+                    <p class="card-text"><strong>Editora:</strong> ${book.publisher}</p>
+                    <p class="card-text"><strong>Gênero:</strong> ${book.genre}</p>
+                    <p class="card-text"><strong>ISBN:</strong> ${book.isbn}</p>
+                    <p class="card-text"><strong>Publicação:</strong> ${book.publication_date}</p>
+                    <p class="card-text"><strong>Sinopse:</strong> ${book.synopsis}</p>
+
+                    <button class="btn btn-warning btn-sm mt-2"
+                      onclick="abrirEdicaoParcialPorIsbn('${book.isbn}')">
+                      Editar Sinopse/Imagem
+                    </button>
+
+                    <!-- Desativação do botão de edição total
+                    <button class="btn btn-info btn-sm mt-2 ms-2"
+                      onclick="abrirEdicaoCompletaPorIsbn('${book.isbn}')">
+                      Editar Tudo
+                    </button> -->
+
+
+                    <button class="btn btn-danger btn-sm mt-2 ms-2"
+                      onclick="excluirLivroPorIsbn('${book.isbn}')">
+                      Excluir
+                    </button>
                   </div>
                 </div>
               </div>
-            `;
-            list.appendChild(card);
-          });
-        })
-        .catch(err => console.error("Erro ao carregar livros:", err));
-    }
+            </div>
+          `;
+          list.appendChild(card);
+        });
+      })
+      .catch(err => console.error("Erro ao carregar livros:", err));
+  }
 
-    function editarLivro(id) {
-      alert("Função de edição ainda não implementada. ID do livro: " + id);
-      // Aqui você pode abrir um modal ou reaproveitar o formulário para edição
-    }
-
-    document.getElementById("searchInput").addEventListener("input", function() {
-      const termo = this.value.toLowerCase();
-      const cards = document.querySelectorAll("#book-list .card");
-      cards.forEach(card => {
-        const texto = card.innerText.toLowerCase();
-        card.parentElement.style.display = texto.includes(termo) ? "block" : "none";
-      });
+  document.getElementById("searchInput").addEventListener("input", function() {
+    const termo = this.value.toLowerCase();
+    document.querySelectorAll("#book-list .card").forEach(card => {
+      const texto = card.innerText.toLowerCase();
+      card.closest('.col-md-6').style.display = texto.includes(termo) ? "block" : "none";
     });
+  });
 
-    window.onload = loadBooks;
+  window.onload = loadBooks;
+
 </script>
 </body>
 </html>

@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 public class BookUpdateDTO {
 
     public String synopsis;
-
     @JsonProperty("poster_path")
     public String posterPath;
 
