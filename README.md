@@ -39,3 +39,7 @@ Livraria e cadastro de livros
 * #### FRONT END:
   
 🍵  [Biblioteca](http://localhost:8080/biblioteca.html)
+
+* #### DOCUMENTAÇÃO:
+  
+🧋  [Swagger](http://localhost:8080/docs/)
